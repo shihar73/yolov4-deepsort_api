@@ -234,6 +234,13 @@ def main(_argv):
 
 
 
+def run(video):
+    flags.DEFINE_string('video', f'{video}', 'path to input video or set to 0 for webcam')
+    app.run(main)
+    return {
+        "count":FLAGS.count
+    }
+
 if __name__ == '__main__':
     try:
         app.run(main)
