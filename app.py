@@ -1,34 +1,32 @@
-from flask import Flask, request, jsonify
-import cv2
-from object_tracker import ObjectTracker # Import the ObjectTracker class from object_tracker.py file
+from flask import Flask, render_template, request, redirect, url_for
+from werkzeug.utils import secure_filename
+import os
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'your-secret-key'
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
+app.config['ALLOWED_EXTENSIONS'] = {'mp4', 'avi', 'mov'}
 
-@app.route('/api/objects', methods=['POST'])
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
+
+
+
+
+@app.route('/', methods=['GET', 'POST'])
 def count_objects():
-    # Read the video file from the request
-    video_file = request.files['video']
-    video_bytes = video_file.read()
+    if request.method == 'POST':
+        # Handle video upload
+        video = request.files['video']
+        if video and allowed_file(video.filename):
+            filename = secure_filename(video.filename)
+            video.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return render_template('index.html', filename=filename)
 
-    # Convert the video bytes to numpy array
-    video_nparray = np.fromstring(video_bytes, np.uint8)
-    video = cv2.imdecode(video_nparray, cv2.IMREAD_COLOR)
+    # Render the video upload form and the video player together
+    return render_template('index.html')
 
-    # Create an instance of the ObjectTracker class and pass the video to it
-    tracker = ObjectTracker(video, 'yolov4', True)
-
-    # Process the video using the YOLOv4 and Deep SORT models
-    tracker.track_objects()
-
-    # Count the number of objects detected
-    num_objects = len(tracker.object_counts)
-
-    # Return the response containing the number of objects
-    response = {
-        'num_objects': num_objects
-    }
-
-    return jsonify(response)
 
 if __name__ == '__main__':
     app.run(debug=True)
