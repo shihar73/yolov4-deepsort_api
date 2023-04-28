@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.utils import secure_filename
 import os
-
+from object_tracker import run
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
@@ -21,7 +21,10 @@ def count_objects():
         video = request.files['video']
         if video and allowed_file(video.filename):
             filename = secure_filename(video.filename)
-            video.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            v_file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            video.save(v_file)
+            run(v_file)
+            print(v_file)
             return render_template('index.html', filename=filename)
 
     # Render the video upload form and the video player together
