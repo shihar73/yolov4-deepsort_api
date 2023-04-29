@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.utils import secure_filename
+from moviepy.editor import VideoFileClip
 import os
 from object_tracker import run
 app = Flask(__name__)
@@ -24,6 +25,10 @@ def count_objects():
             v_file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             video.save(v_file)
             data = run(v_file)
+            if data:
+                clip = VideoFileClip("./static/output/tracker.avi")
+                clip.write_videofile("./static/output/tracker.mp4")
+                
             print(v_file, data["count"])
             return render_template('index.html', filename=data["filename"], count=data["count"])
 
