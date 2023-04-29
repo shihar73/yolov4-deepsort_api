@@ -103,7 +103,7 @@ def main(_argv):
             pass
         frame_num +=1
         print('Frame #: ', frame_num)
-        frame_size = frame.shape[:2]
+        # frame_size = frame.shape[:2]
         image_data = cv2.resize(frame, (input_size, input_size))
         image_data = image_data / 255.
         image_data = image_data[np.newaxis, ...].astype(np.float32)
@@ -241,12 +241,14 @@ def run(video):
     try:
         flags.DEFINE_string('video', f'{video}', 'path to input video or set to 0 for webcam')
         app.run(main)
-        return {
-            "filename": "tracker.avi",
-            "count":count
-        }
     except:
-        return False
+        pass
+    
+    return {
+        "filename": "tracker.avi",
+        "count":count
+    }
+
 
 if __name__ == '__main__':
     try:

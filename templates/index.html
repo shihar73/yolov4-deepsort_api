@@ -20,6 +20,11 @@
             <source src="{{ url_for('static', filename='output/' + filename) }}" type="video/ogg">
             Your browser does not support the video tag.
         </video>
+
+        <div>
+            <h3>Object count in this video</h3>
+            <p>Count: {{ count }}</p>
+        </div>
     {% endif %}
 </body>
 </html>

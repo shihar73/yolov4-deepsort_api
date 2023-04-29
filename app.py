@@ -25,7 +25,7 @@ def count_objects():
             video.save(v_file)
             data = run(v_file)
             print(v_file, data["count"])
-            return render_template('index.html', filename=data["filename"])
+            return render_template('index.html', filename=data["filename"], count=data["count"])
 
     # Render the video upload form and the video player together
     return render_template('index.html')
