@@ -34,17 +34,20 @@ flags.DEFINE_string('output_format', 'XVID', 'codec used in VideoWriter when sav
 flags.DEFINE_float('iou', 0.45, 'iou threshold')
 flags.DEFINE_float('score', 0.50, 'score threshold')
 flags.DEFINE_boolean('dont_show', True, 'dont show video output')
-flags.DEFINE_boolean('info', False, 'show detailed info of tracked objects')
-flags.DEFINE_boolean('count', False, 'count objects being tracked on screen')
+flags.DEFINE_boolean('info', True, 'show detailed info of tracked objects')
+flags.DEFINE_boolean('count', True, 'count objects being tracked on screen')
 
+global count
+count = 0
 
 def main(_argv):
     # Definition of the parameters
     max_cosine_distance = 0.4
     nn_budget = None
     nms_max_overlap = 1.0
-    global count 
-    
+    global count
+    global names
+
     # initialize deep sort
     model_filename = 'model_data/mars-small128.pb'
     encoder = gdet.create_box_encoder(model_filename, batch_size=1)
@@ -207,7 +210,6 @@ def main(_argv):
                 continue 
             bbox = track.to_tlbr()
             class_name = track.get_class()
-            
         # draw bbox on screen
             color = colors[int(track.track_id) % len(colors)]
             color = [i * 255 for i in color]
@@ -244,10 +246,23 @@ def run(video):
     except:
         pass
     
-    return {
-        "filename": "tracker.avi",
-        "count":count
+    res = {
+        "filename": "tracker.mp4",
+        "count":count,
+        "cars": 0,
+        "bicycles": 0,
+        "persons": 0,
+
     }
+    print("names : ", names)
+    name = names.tolist()
+    print("name : ", name)
+    res["cars"] = name.count("car")
+    res["bicycles"] = name.count("bicycle")
+    res["persons"] = name.count("person")
+
+
+    return res
 
 
 if __name__ == '__main__':

@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload and Show Video</title>
+    <link href="https://vjs.zencdn.net/7.14.3/video-js.css" rel="stylesheet" />
+    <script src="https://vjs.zencdn.net/7.14.3/video.min.js"></script>
 </head>
 <body>
     <h1>Upload and Show Video</h1>
@@ -14,16 +16,13 @@
         <button type="submit">Upload</button>
     </form>
 
-    {% if filename %}
-        <video width="800" height="600" controls>
-            <source src="{{ url_for('static', filename='output/' + filename) }}" type="video/mp4">
-            <source src="{{ url_for('static', filename='output/' + filename) }}" type="video/ogg">
-            Your browser does not support the video tag.
-        </video>
-
+    {% if count %}
         <div>
-            <h3>Object count in this video</h3>
-            <p>Count: {{ count }}</p>
+            <h3>Object counts in this video</h3>
+            <p>Total Objects: {{ count }}</p>
+            <p>Cars: {{ cars }}</p>
+            <p>Bicycles: {{ bicycles }}</p>
+            <p>Persons: {{ persons }}</p>
         </div>
     {% endif %}
 </body>
