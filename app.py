@@ -23,9 +23,9 @@ def count_objects():
             filename = secure_filename(video.filename)
             v_file = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             video.save(v_file)
-            run(v_file)
-            print(v_file)
-            return render_template('index.html', filename=filename)
+            data = run(v_file)
+            print(v_file, data["count"])
+            return render_template('index.html', filename=data["filename"])
 
     # Render the video upload form and the video player together
     return render_template('index.html')
